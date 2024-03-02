@@ -1,0 +1,14 @@
+module CLA8Bit(A, B, CI, S, CO); 
+
+input [7:0] A, B; 
+input CI; 
+output [7:0] S; 
+output CO;
+
+wire CO1;
+
+
+CLA4Bit C1(A[3:0], B[3:0], CI, S[3:0], CO1);
+CLA4Bit C2(A[7:4], B[7:4], CO1, S[7:4], CO);
+
+endmodule
