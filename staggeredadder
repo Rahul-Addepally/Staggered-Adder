@@ -1,0 +1,33 @@
+module StaggeredAdd(Clock, A, B, CI, S, CO); 
+
+input Clock; 
+input [15:0] A, B; 
+input CI; 
+output [15:0] S; 
+output CO; 
+
+wire [7:0]S1,S2;
+reg [24:0]AB_Lower;
+reg [16:0]AB_Upper;
+reg CO;
+
+reg [15:0]S;
+reg CO1,CO2;
+
+CLA8Bit C1(A[7:0], B[7:0], CI, S1, CO1); 
+CLA8Bit C2(AB_Lower[15:8], AB_Lower[23:16], AB_Lower[24], S2, CO2); 
+
+always@(posedge Clock)
+	begin
+	AB_Lower[7:0]<=S1;
+	AB_Lower[15:8]<=A[15:8];
+	AB_Lower[23:16]<=B[15:8];
+	AB_Lower[24]<=CO1;
+	AB_Upper[7:0]<=AB_Lower[7:0];
+	AB_Upper[15:8]<=S2;
+	AB_Upper[16]<=CO2;
+	assign S={AB_Upper[15:8],AB_Upper[7:0]};
+	assign CO=AB_Upper[16];
+	end
+	
+endmodule
