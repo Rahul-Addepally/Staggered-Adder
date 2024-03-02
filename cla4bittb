@@ -1,0 +1,50 @@
+module top;
+
+logic [3:0] A, B; 
+logic CI; 
+logic [3:0] S; 
+logic CO;
+
+int i,Aloop,Bloop;
+int pass_count=0,fail_count=0;
+logic [7:0]Expected_Output;
+
+parameter period=50;
+
+CLA4Bit CLA1(A, B, CI, S, CO); 
+
+initial
+	begin
+	for(i=0;i<=1;i++)
+		begin
+		CI<=i;
+		for(Aloop=0;Aloop<=15;Aloop++)
+			begin
+			A<=Aloop;
+			for(Bloop=0;Bloop<=15;Bloop++)
+				begin
+				B<=Bloop;
+				#period;
+				
+				Expected_Output<=A+B+CI;
+				#period;
+				
+				if(Expected_Output==={CO,S})
+					pass_count=pass_count+1;
+				else
+					begin
+					fail_count=fail_count+1;
+					$display("A:%d B:%d CI:%d CO,S:%d Expected_Output:%d",A,B,CI,{CO,S},Expected_Output);
+					end
+					
+				if(pass_count===511)	
+					begin
+					$display("All Cases are passed");
+					end
+				
+				end
+			end
+		end
+    end
+
+endmodule
